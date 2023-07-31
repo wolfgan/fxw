@@ -1,7 +1,6 @@
 package xwidget
 
 import (
-	"image/color"
 	"math"
 	"sync"
 	"time"
@@ -34,7 +33,7 @@ func (r *dotsProgressInfinityRenderer) MinSize() fyne.Size {
 	return r.progress.minSize
 }
 
-func (r *dotsProgressInfinityRenderer) updateBar(done float32) {
+func (r *dotsProgressInfinityRenderer) updateBar() {
 	r.moveDots()
 	canvas.Refresh(r.progress)
 }
@@ -51,7 +50,7 @@ func (r *dotsProgressInfinityRenderer) moveDots() {
 	if r.animatedOff == len(r.dots) {
 		r.animatedOff = 0
 	}
-	r.dots[r.animatedOff].FillColor = progressBackgroundFadedColor(4)
+	r.dots[r.animatedOff].FillColor = primaryFadedColor(4)
 	r.dots[r.animatedOff].Refresh()
 
 }
@@ -81,7 +80,7 @@ func (r *dotsProgressInfinityRenderer) dotsResize(size fyne.Size) {
 // applyTheme updates the progress bar to match the current theme
 func (r *dotsProgressInfinityRenderer) applyTheme() {
 	for _, dot := range r.dots {
-		dot.FillColor = progressBackgroundFadedColor(2)
+		dot.FillColor = primaryFadedColor(2)
 	}
 }
 
@@ -96,7 +95,6 @@ func (r *dotsProgressInfinityRenderer) Refresh() {
 	}
 
 	canvas.Refresh(r.progress)
-	//canvas.Refresh(r.progress.super())
 }
 
 func (r *dotsProgressInfinityRenderer) isRunning() bool {
@@ -121,7 +119,7 @@ func (r *dotsProgressInfinityRenderer) start() {
 	r.animation = time.NewTicker(time.Duration(int64(time.Millisecond) * int64(r.animationSpeed*100)))
 	go func() {
 		for range r.animation.C {
-			r.updateBar(0)
+			r.updateBar()
 		}
 	}()
 }
@@ -210,9 +208,9 @@ func (p *DotsProgressBarInfinity) CreateRenderer() fyne.WidgetRenderer {
 	var objects []fyne.CanvasObject
 
 	for angle := 435; angle >= 90; angle -= 15 {
-		dot := canvas.NewCircle(progressBackgroundFadedColor(4))
+		dot := canvas.NewCircle(primaryFadedColor(4))
 		dot.StrokeWidth = 1
-		dot.StrokeColor = progressBackgroundFadedColor(2)
+		dot.StrokeColor = primaryFadedColor(2)
 
 		dots = append(dots, dot)
 		objects = append(objects, dot)
@@ -236,10 +234,4 @@ func NewDotsProgressBarInfinity() *DotsProgressBarInfinity {
 	p := &DotsProgressBarInfinity{minSize: fyne.Size{0, 0}}
 	p.ExtendBaseWidget(p)
 	return p
-}
-
-func progressBackgroundFadedColor(fade uint8) color.Color {
-	r, g, b, a := ToNRGBA(theme.PrimaryColor())
-	faded := uint8(a) / fade
-	return &color.NRGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: faded}
 }

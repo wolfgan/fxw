@@ -57,7 +57,7 @@ func (r *dotsProgressRenderer) updateBar() {
 		if i < dotNum {
 			r.dots[i].FillColor = theme.PrimaryColor()
 		} else {
-			r.dots[i].FillColor = progressBackgroundFadedColor(4)
+			r.dots[i].FillColor = primaryFadedColor(4)
 		}
 	}
 }
@@ -83,11 +83,11 @@ func (r *dotsProgressRenderer) dotsResize(size fyne.Size) {
 		y := float32(centerY - radius*math.Sin(float64(angle)*2*math.Pi/360))
 		r.dots[dot].Position1 = fyne.Position{X: x - dotSize, Y: y - dotSize}
 		r.dots[dot].Position2 = fyne.Position{X: x + dotSize, Y: y + dotSize}
-		//r.dots[dot].Refresh()
 		dot++
 	}
 }
 
+// Refresh
 func (r *dotsProgressRenderer) Refresh() {
 	size := r.progress.Size()
 	r.label.Color = theme.PrimaryColor()
@@ -100,7 +100,7 @@ func (r *dotsProgressRenderer) Refresh() {
 	}
 }
 
-// DotsProgressBar xwidget creates a horizontal panel that indicates progress
+// DotsProgressBar the widget creates a circle of dots indicating progress
 type DotsProgressBar struct {
 	widget.BaseWidget
 
@@ -117,8 +117,8 @@ type DotsProgressBar struct {
 	binder basicBinder
 }
 
-// Bind connects the specified data source to this ProgressBar.
-// The current value will be displayed and any changes in the data will cause the xwidget to update.
+// Bind connects the specified data source to this DotsProgressBar.
+// The current value will be displayed and any changes in the data will cause the widget to update.
 //
 // Since: 2.0
 func (p *DotsProgressBar) Bind(data binding.Float) {
@@ -127,13 +127,13 @@ func (p *DotsProgressBar) Bind(data binding.Float) {
 }
 
 // SetValue changes the current value of this progress bar (from p.Min to p.Max).
-// The xwidget will be refreshed to indicate the change.
+// The widget will be refreshed to indicate the change.
 func (p *DotsProgressBar) SetValue(v float64) {
 	p.Value = v
 	p.Refresh()
 }
 
-// MinSize returns the size that this xwidget should not shrink below
+// MinSize returns the size that this widget should not shrink below
 func (p *DotsProgressBar) MinSize() fyne.Size {
 	p.ExtendBaseWidget(p)
 	return p.BaseWidget.MinSize()
@@ -144,7 +144,7 @@ func (p *DotsProgressBar) SetMinSize(size fyne.Size) {
 	p.Refresh()
 }
 
-// CreateRenderer is a private method to Fyne which links this xwidget to its renderer
+// CreateRenderer is a private method to Fyne which links this widget to its renderer
 func (p *DotsProgressBar) CreateRenderer() fyne.WidgetRenderer {
 	p.ExtendBaseWidget(p)
 	if p.Min == 0 && p.Max == 0 {
@@ -160,9 +160,9 @@ func (p *DotsProgressBar) CreateRenderer() fyne.WidgetRenderer {
 	var objects []fyne.CanvasObject
 
 	for angle := 435; angle >= 90; angle -= 15 {
-		dot := canvas.NewCircle(progressBackgroundFadedColor(4))
+		dot := canvas.NewCircle(primaryFadedColor(4))
 		dot.StrokeWidth = 1
-		dot.StrokeColor = progressBackgroundFadedColor(2)
+		dot.StrokeColor = primaryFadedColor(2)
 
 		dots = append(dots, dot)
 		objects = append(objects, dot)
@@ -193,7 +193,6 @@ func (p *DotsProgressBar) Unbind() {
 func NewDotsProgressBar() *DotsProgressBar {
 	p := &DotsProgressBar{Min: 0, Max: 1, minSize: fyne.Size{0, 0}}
 	p.ExtendBaseWidget(p)
-	//cache.Renderer(p).Layout(p.MinSize())
 	return p
 }
 

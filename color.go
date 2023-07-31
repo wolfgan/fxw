@@ -1,6 +1,16 @@
 package xwidget
 
-import "image/color"
+import (
+	"image/color"
+
+	"fyne.io/fyne/v2/theme"
+)
+
+func primaryFadedColor(fade uint8) color.Color {
+	r, g, b, a := ToNRGBA(theme.PrimaryColor())
+	faded := uint8(a) / fade
+	return &color.NRGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: faded}
+}
 
 // ToNRGBA converts a color to RGBA values which are not premultiplied, unlike color.RGBA().
 func ToNRGBA(c color.Color) (r, g, b, a int) {
