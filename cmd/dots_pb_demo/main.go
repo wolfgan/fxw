@@ -25,19 +25,21 @@ func main() {
 	pbi.SetMinSize(fyne.NewSize(200, 200))
 
 	go func() {
+		value := 0.0
 		direction := 0.05
 		for {
-			val, _ := progress.Get()
+			progress.Set(value)
+			data.Set(fmt.Sprintf("Progress: %.1f", value*100))
+
+			time.Sleep(time.Millisecond * 500)
+
+			value += direction
 			switch {
-			case val >= 1.0:
+			case value >= 1.0:
 				direction = -0.05
-			case val <= 0.0:
+			case value <= 0.0:
 				direction = 0.05
 			}
-
-			progress.Set(val + direction)
-			data.Set(fmt.Sprintf("Progress: %.1f", (val+direction)*100))
-			time.Sleep(time.Millisecond * 100)
 		}
 	}()
 
