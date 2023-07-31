@@ -14,7 +14,7 @@ import (
 
 func main() {
 	a := app.New()
-	w := a.NewWindow("Calendar")
+	w := a.NewWindow("DotsProgressBar")
 
 	progress := binding.NewFloat()
 	pbv := xwidget.NewDotsProgressBarWithData(progress)
